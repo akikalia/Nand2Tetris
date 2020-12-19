@@ -1,0 +1,27 @@
+
+class Random {
+    field int seed, A, C;      
+
+    constructor Random new(int s) {
+        let seed = s;
+        let A = 15;
+        let C = 253;
+        return this;
+    }
+
+    /** Prints this list. */
+    method int rand() {
+        let seed = (seed * A) + C;
+        if (seed < 0){
+            let seed = seed * (-1); 
+        }
+        return seed;
+    }
+
+    /** Disposes this List by recursively disposing its tail. */
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+
+}

@@ -1,0 +1,131 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/09/Square/Square.jack
+
+/** Implements a graphical square. */
+class Snake {
+
+   field Square head; // screen location of the square's top-left corner
+   field List body;
+   field int cellSize, baseX, baseY, height, width;
+
+
+   /** Constructs a new square with a given location and size. */
+   constructor Snake new(int x, int y, int width_, int height_, int cellS) {
+      let cellSize = cellS;
+      let head = Square.new(x + ((width_ / 2) * cellSize), y + ((height_ / 2) * cellSize), cellSize);
+      let body = List.new(head, null);
+      let height = height_;
+      let width = width_;
+      let baseX = x;
+      let baseY = y;
+      return this;
+   }
+
+   method Square getHead() {
+      return head;
+   }
+
+
+   /** Disposes this square. */
+   method void dispose() {
+      do body.dispose();
+      do Memory.deAlloc(this);
+      return;
+   }
+
+    method void removeTail() {
+      var List curr;
+      var List next;
+      let curr = body;
+      let next = body;
+      while(~(next.getNext() = null)){
+          let curr = next;
+          let next = curr.getNext();
+      }
+      do next.dispose();
+      do curr.setNext(null);
+      return ;
+   }
+
+   method boolean selfCollision(int x, int y){
+      var List lst;
+      var Square temp;
+      let lst = body;
+      while(~(lst = null)){
+         let temp = lst.getData();
+         if (temp.getX() = x){
+            if (temp.getY() = y){
+               return true;
+            }
+         }
+         let lst = lst.getNext();
+      }
+      return false;
+   }
+
+   method boolean addDown() {
+      var int x, y;
+      let x = head.getX();
+      let y = head.getY();
+      let y = y + cellSize;
+      if (selfCollision(x, y)){
+         return false;
+      }
+      if ((baseY + ((height-1)*cellSize - 1)) < y){
+         return false;
+      }
+      let head = Square.new(x, y, cellSize);
+      let body = List.new(head, body);
+      return true;
+   } 
+
+   method boolean addUp() {
+      var int x, y;
+      let x = head.getX();
+      let y = head.getY();
+      let y = y - cellSize;
+      if (selfCollision(x, y)){
+         return false;
+      }
+      if (baseY > y){
+         return false;
+      }
+      let head = Square.new(x, y, cellSize);
+      let body = List.new(head, body);
+      return true;
+   } 
+
+   method boolean addLeft() {
+      var int x, y;
+      let x = head.getX();
+      let y = head.getY();
+      let x = x - cellSize;
+      if (selfCollision(x, y)){
+         return false;
+      }
+      if (baseX > x){
+         return false;
+      }
+      let head = Square.new(x, y, cellSize);
+      let body = List.new(head, body);
+      return true;
+   } 
+
+   method boolean addRight() {
+      var int x, y;
+      let x = head.getX();
+      let y = head.getY();
+      let x = x + cellSize;
+      if (selfCollision(x, y)){
+         return false;
+      }
+      if ((baseX + (((width-1)*cellSize) - 1 )) < x){
+         return false;
+      }
+      let head = Square.new(x, y, cellSize);
+      let body = List.new(head, body);
+      return true;
+   }
+}

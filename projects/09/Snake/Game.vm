@@ -1,0 +1,231 @@
+function Game.new 0
+push constant 13
+call Memory.alloc 1
+pop pointer 0
+push constant 8
+pop this 3
+push constant 2
+pop this 2
+push constant 2
+pop this 1
+push constant 512
+pop this 4
+push constant 256
+pop this 5
+push constant 0
+pop this 8
+push this 2
+push this 3
+call Math.multiply 2
+pop this 9
+push this 4
+push this 3
+call Math.divide 2
+pop this 7
+push this 5
+push this 3
+call Math.divide 2
+pop this 6
+push constant 98
+call Random.new 1
+pop this 12
+push this 8
+push this 9
+push this 7
+push this 6
+push this 2
+sub
+push this 3
+call Snake.new 5
+pop this 11
+push argument 0
+pop this 0
+push constant 0
+push argument 0
+call Draw.lives 2
+pop temp 0
+push pointer 0
+call Game.createFood 1
+pop temp 0
+push pointer 0
+return
+function Game.dispose 0
+push argument 0
+pop pointer 0
+push this 12
+call Random.dispose 1
+pop temp 0
+push this 11
+call Snake.dispose 1
+pop temp 0
+push this 10
+push constant 0
+not
+call Square.dispose 2
+pop temp 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
+return
+function Game.reCreateFood 0
+push argument 0
+pop pointer 0
+push this 10
+push constant 0
+not
+call Square.dispose 2
+pop temp 0
+push pointer 0
+call Game.createFood 1
+pop temp 0
+push constant 0
+return
+function Game.createFood 2
+push argument 0
+pop pointer 0
+push this 12
+call Random.rand 1
+pop local 0
+push local 0
+push local 0
+push this 7
+push this 1
+sub
+call Math.divide 2
+push this 7
+push this 1
+sub
+call Math.multiply 2
+sub
+pop local 0
+push this 12
+call Random.rand 1
+pop local 1
+push local 1
+push local 1
+push this 6
+push this 1
+sub
+push this 2
+sub
+call Math.divide 2
+push this 6
+push this 1
+sub
+push this 2
+sub
+call Math.multiply 2
+sub
+pop local 1
+push this 8
+push local 0
+push this 3
+call Math.multiply 2
+add
+push this 9
+push local 1
+push this 3
+call Math.multiply 2
+add
+push this 1
+push this 3
+call Math.multiply 2
+call Square.new 3
+pop this 10
+push constant 0
+return
+function Game.check 1
+push argument 0
+pop pointer 0
+push this 11
+call Snake.getHead 1
+pop local 0
+push this 10
+push local 0
+call Square.contains 2
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push pointer 0
+call Game.reCreateFood 1
+pop temp 0
+push local 0
+call Square.draw 1
+pop temp 0
+goto IF_END0
+label IF_FALSE0
+push this 11
+call Snake.removeTail 1
+pop temp 0
+label IF_END0
+push constant 0
+return
+function Game.moveUp 0
+push argument 0
+pop pointer 0
+push this 11
+call Snake.addUp 1
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push pointer 0
+call Game.check 1
+pop temp 0
+push constant 0
+not
+return
+label IF_FALSE0
+push constant 0
+return
+function Game.moveDown 0
+push argument 0
+pop pointer 0
+push this 11
+call Snake.addDown 1
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push pointer 0
+call Game.check 1
+pop temp 0
+push constant 0
+not
+return
+label IF_FALSE0
+push constant 0
+return
+function Game.moveLeft 0
+push argument 0
+pop pointer 0
+push this 11
+call Snake.addLeft 1
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push pointer 0
+call Game.check 1
+pop temp 0
+push constant 0
+not
+return
+label IF_FALSE0
+push constant 0
+return
+function Game.moveRight 0
+push argument 0
+pop pointer 0
+push this 11
+call Snake.addRight 1
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push pointer 0
+call Game.check 1
+pop temp 0
+push constant 0
+not
+return
+label IF_FALSE0
+push constant 0
+return

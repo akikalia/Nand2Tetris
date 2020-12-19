@@ -1,0 +1,99 @@
+class Game {
+   field int lives, foodSize , panelHeight, cellSize,screenWidth, screenHeight, boardHeight, boardWidth, baseX, baseY; 
+   field Square food;
+   field Snake snake;
+   field Random rand;
+
+
+   constructor Game new(int hearts) {
+
+      let cellSize = 8;
+      let panelHeight = 2;
+
+      let foodSize = 2;
+      let screenWidth = 512;
+      let screenHeight = 256;
+      let baseX = 0;
+      let baseY = panelHeight*cellSize;
+      let boardWidth = screenWidth/cellSize;
+      let boardHeight = screenHeight/cellSize;
+      let rand = Random.new(98);
+      let snake = Snake.new(baseX, baseY, boardWidth, boardHeight-panelHeight, cellSize);
+      let lives = hearts;
+      do Draw.lives(0, hearts);
+      do createFood();
+      return this;
+   }
+
+   /** Disposes this game. */
+   method void dispose() {
+      do rand.dispose();
+      do snake.dispose();
+      do food.dispose(true);
+      do Memory.deAlloc(this);
+      return;
+   }
+
+
+   method void reCreateFood() {
+      do food.dispose(true);
+      do createFood();
+      return;
+   }
+
+   method void createFood() {
+      var int rx, ry;
+      let rx = rand.rand();
+      let rx = rx-((rx/(boardWidth-foodSize))*(boardWidth-foodSize));
+      let ry = rand.rand();
+      let ry = ry-((ry/(boardHeight-foodSize-panelHeight))*(boardHeight-foodSize-panelHeight));
+      // let rx = 0;
+      // let ry = 9;
+      let food = Square.new(baseX + (rx * cellSize), baseY + (ry * cellSize), foodSize*cellSize);
+      
+      return;
+   }
+   
+    method void check() {
+       var Square head;
+       let head = snake.getHead();
+        if (food.contains(head)){//no collision
+            do reCreateFood();
+            do head.draw();
+        }else{
+            do snake.removeTail();
+        }
+        return;
+    }
+
+   /** Moves the square in the current direction. */
+    method boolean moveUp() {
+      if(snake.addUp()){
+         do check();
+         return true;
+      }
+      return false;
+   }
+
+    method boolean moveDown() {
+      if(snake.addDown()){
+         do check();
+         return true;
+      }
+      return false;
+   }
+    method boolean moveLeft() {
+      if(snake.addLeft()){
+         do check();
+         return true;
+      }
+      return false;
+   }
+     method boolean moveRight() {
+      if(snake.addRight()){
+         do check();
+         return true;
+      }
+      return false;
+   }
+}

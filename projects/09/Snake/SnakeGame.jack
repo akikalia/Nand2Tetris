@@ -1,0 +1,70 @@
+class SnakeGame {
+   field Game game; // the square of this game
+   field int direction; // the square's current direction: 
+                        // 0=none, 1=up, 2=down, 3=left, 4=right
+
+   /** Constructs a new Square Game. */
+   constructor SnakeGame new(int lives) {
+      // Creates a 30 by 30 pixels square and positions it at the top-left
+      // of the screen.
+      let game = Game.new(lives);
+      let direction = 0;  // initial state is no movement
+      return this;
+   }
+
+   /** Disposes this game. */
+   method void dispose() {
+      do game.dispose();
+      do Memory.deAlloc(this);
+      return;
+   }
+
+   /** Moves the square in the current direction. */
+   method boolean move() {
+      var boolean ret;
+      let ret = true;
+      if (direction = 1) { let ret = game.moveUp(); }
+      if (direction = -1) { let ret = game.moveDown(); }
+      if (direction = 2) { let ret = game.moveLeft(); }
+      if (direction = -2) { let ret = game.moveRight(); }
+      do Sys.wait(50);  // delays the next movement
+      return ret;
+   }
+
+   /** Runs the game: handles the user's inputs and moves the square accordingly */
+   method void run() {
+      var char key, newKey;  // the key currently pressed by the user
+      var boolean exit;
+      let exit = true;
+      
+      while (exit) {
+         // waits for a key to be pressed
+         while (key = 0) {
+            let key = Keyboard.keyPressed();
+            if (exit){
+               let exit = move();
+            }else{
+               let key = 1;
+            }
+         }
+         if (key = 81)  { let exit = false; }     // q key
+         //if (key = 90)  { do square.decSize(); } // z key
+         //if (key = 88)  { do square.incSize(); } // x key
+         if ((key = 131) & ~(direction = -1)) { let direction = 1; }   // up arrow
+         if ((key = 133) & ~(direction = 1)) { let direction = -1; }   // down arrow
+         if ((key = 130) & ~(direction = -2)) { let direction = 2; }   // left arrow
+         if ((key = 132) & ~(direction = 2)) { let direction = -2; }   // right arrow
+
+         // waits for the key to be released
+         while (~(key = 0)) {
+            let key = Keyboard.keyPressed();
+            if (exit){
+               let exit = move();
+            }else{
+               let key = 0;
+            }
+         }
+     } // while
+     return;
+   }
+}

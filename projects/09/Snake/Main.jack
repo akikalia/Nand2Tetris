@@ -1,0 +1,16 @@
+class Main {
+   function void main() {
+      var int lives;
+      var SnakeGame game;
+      let lives = 3;
+      while (lives > 0){
+         let game = SnakeGame.new(lives);
+         do game.run();
+         do game.dispose();
+         let lives = lives - 1;
+      }
+      do Draw.game_over();
+      do Sys.wait(3000);
+      return ;
+   }
+}
